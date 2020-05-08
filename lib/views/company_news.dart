@@ -52,6 +52,7 @@ class _company_newsState extends State<company_news> {
         centerTitle: true,
         elevation: 0.0,
       ),
+      
       body: _loading
           ? Center(
               child: CircularProgressIndicator(),
@@ -88,12 +89,7 @@ class _company_newsState extends State<company_news> {
 class BlogTile extends StatelessWidget {
   final String imageUrl, title, desp, url;
 
-  BlogTile(
-      {@required this.imageUrl,
-      @required this.title,
-      @required this.desp,
-      @required this.url});
-
+  BlogTile( {@required this.imageUrl, @required this.title, @required this.desp, @required this.url});
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
