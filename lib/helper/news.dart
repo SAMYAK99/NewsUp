@@ -1,5 +1,4 @@
 import 'dart:convert';
-
 import 'package:newsxflutter/model/article_model.dart';
 import 'package:http/http.dart' as http;
 
@@ -16,7 +15,9 @@ class News {
     if (jsonData['status'] == "ok") {
       // carefully extract the data
       jsonData['articles'].forEach((element) {
-        if (element['urlToImage'] != null || element['description'] != null) {
+        if (element['urlToImage'] != null &&
+            element['description'] != null &&
+            element['title'] != null) {
           ArticleModel articleModel = ArticleModel(
             // saving all the data in respective format
             title: element['title'],
@@ -24,6 +25,7 @@ class News {
             url: element['url'],
             urlToImage: element['urlToImage'],
             content: element['content'],
+            source: element['source']['name'],
           );
 
           news.add(articleModel);
@@ -54,6 +56,7 @@ class CategoryNews {
             url: element['url'],
             urlToImage: element['urlToImage'],
             content: element['content'],
+            source: element['source']['name'],
           );
 
           news.add(articleModel);
