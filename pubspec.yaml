@@ -26,11 +26,20 @@ dependencies:
   http: ^0.12.0+4
   cached_network_image: ^2.1.0+1
   webview_flutter: ^0.3.20+2
+  js: ^0.6.1+1
+  url_launcher: ^5.5.0
+  share: ^0.6.1+1
+  dynamic_theme: ^1.0.1
+  google_fonts: ^1.1.0
+
 
 
 dev_dependencies:
   flutter_test:
     sdk: flutter
+
+
+
 
 
 # For information on the generic Dart part of this file, see the
@@ -45,8 +54,8 @@ flutter:
   uses-material-design: true
 
   # To add assets to your application, add an assets section, like this:
-  # assets:
-  #  - images/a_dot_burr.jpeg
+  assets:
+    - assets/newsicon.png
   #  - images/a_dot_ham.jpeg
 
   # An image asset can refer to one or more resolution-specific "variants", see
