@@ -1,12 +1,15 @@
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:newsxflutter/helper/news.dart';
 import 'package:newsxflutter/model/article_model.dart';
 
-import 'article_views.dart';
+import 'Description.dart';
 
 class company_news extends StatefulWidget {
   final String category;
-  company_news({this.category});
+  final bool isswitched;
+
+  company_news({this.category, this.isswitched});
 
   @override
   _company_newsState createState() => _company_newsState();
@@ -40,11 +43,13 @@ class _company_newsState extends State<company_news> {
       appBar: AppBar(
         title: Row(
           children: <Widget>[
-            Text("Flutter"),
             Text(
-              "News",
-              style: TextStyle(
-                color: Colors.redAccent,
+              "NewsUp",
+              style: GoogleFonts.poppins(
+                textStyle: TextStyle(
+                    letterSpacing: .5,
+                    fontSize: 17.0,
+                    fontWeight: FontWeight.w600),
               ),
             )
           ],
@@ -52,7 +57,6 @@ class _company_newsState extends State<company_news> {
         centerTitle: true,
         elevation: 0.0,
       ),
-      
       body: _loading
           ? Center(
               child: CircularProgressIndicator(),
@@ -65,8 +69,8 @@ class _company_newsState extends State<company_news> {
                       padding: EdgeInsets.only(top: 15.0),
                       child: ListView.builder(
                         itemCount: articles.length,
-                        physics:
-                            ClampingScrollPhysics(), // VM : for scrolling in vertical direction
+                        physics: ClampingScrollPhysics(),
+                        // VM : for scrolling in vertical direction
                         shrinkWrap: true,
                         itemBuilder: (context, index) {
                           return BlogTile(
@@ -74,6 +78,8 @@ class _company_newsState extends State<company_news> {
                             title: articles[index].title,
                             desp: articles[index].description,
                             url: articles[index].url,
+                            content: articles[index].content,
+                            source: articles[index].source,
                           );
                         },
                       ),
@@ -87,9 +93,16 @@ class _company_newsState extends State<company_news> {
 }
 
 class BlogTile extends StatelessWidget {
-  final String imageUrl, title, desp, url;
+  final String imageUrl, title, desp, url, content, source;
 
-  BlogTile( {@required this.imageUrl, @required this.title, @required this.desp, @required this.url});
+  BlogTile(
+      {@required this.imageUrl,
+      @required this.title,
+      @required this.desp,
+      @required this.url,
+      @required this.content,
+      this.source});
+
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
@@ -97,9 +110,8 @@ class BlogTile extends StatelessWidget {
         Navigator.push(
             context,
             MaterialPageRoute(
-                builder: (context) => article_views(
-                      blogURL: url,
-                    )));
+                builder: (context) =>
+                    Description(imageUrl, title, content, url, source)));
       },
       child: Container(
           padding: EdgeInsets.symmetric(horizontal: 18.0),
@@ -110,16 +122,33 @@ class BlogTile extends StatelessWidget {
                   borderRadius: BorderRadius.circular(10.0),
                   child: Image.network(imageUrl)),
               Text(title,
-                  style: TextStyle(
-                      fontSize: 18.0,
-                      color: Colors.black87,
-                      fontWeight: FontWeight.w500)),
+                  style: GoogleFonts.poppins(
+                    textStyle: TextStyle(
+                        letterSpacing: .5,
+                        fontSize: 17.0,
+                        fontWeight: FontWeight.w600),
+                  )),
               SizedBox(height: 8),
-              Text(
-                desp,
-                style: TextStyle(
-                  color: Colors.black54,
-                ),
+              Container(
+                child: (desp == null)
+                    ? Text(
+                        "For more info read the full News!",
+                        style: GoogleFonts.poppins(
+                          textStyle: TextStyle(
+                              letterSpacing: .5,
+                              fontSize: 15.0,
+                              fontWeight: FontWeight.w600),
+                        ),
+                      )
+                    : Text(
+                        desp,
+                        style: GoogleFonts.poppins(
+                          textStyle: TextStyle(
+                              letterSpacing: .5,
+                              fontSize: 15.0,
+                              fontWeight: FontWeight.w600),
+                        ),
+                      ),
               ),
             ],
           )),
