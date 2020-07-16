@@ -1,19 +1,29 @@
-import 'package:cached_network_image/cached_network_image.dart';
+import 'package:dynamic_theme/dynamic_theme.dart';
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:newsxflutter/helper/data.dart';
 import 'package:newsxflutter/helper/news.dart';
 import 'package:newsxflutter/model/article_model.dart';
 import 'package:newsxflutter/model/category_model.dart';
-import 'package:newsxflutter/views/article_views.dart';
-import 'package:newsxflutter/views/company_news.dart';
+import 'package:newsxflutter/views/Description.dart';
+import 'package:newsxflutter/views/category_news.dart';
+import 'package:intl/intl.dart';
 
 class Home extends StatefulWidget {
   @override
   _HomeState createState() => _HomeState();
 }
-class _HomeState extends State<Home> {
+
+class _HomeState extends State<Home> with SingleTickerProviderStateMixin {
   List<CategoryModel> categories = new List<CategoryModel>();
   List<ArticleModel> articles = new List<ArticleModel>();
+
+  void changeBrightness() {
+    DynamicTheme.of(context).setBrightness(
+        Theme.of(context).brightness == Brightness.dark
+            ? Brightness.light
+            : Brightness.dark);
+  }
 
   //for loading
   bool _loading;
@@ -41,16 +51,22 @@ class _HomeState extends State<Home> {
   Widget build(BuildContext context) {
     return Scaffold(
         appBar: AppBar(
-          centerTitle: true,
+          backgroundColor: Colors.blueAccent,
           title: Row(
-            children: <Widget>[
-              Text("Flutter"),
-              Text(
-                "News",
-                style: TextStyle(
-                  color: Colors.redAccent,
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              WidgetTitle(getStrToday()),
+              IconButton(
+                onPressed: () {
+                  setState(() {
+                    changeBrightness();
+                  });
+                },
+                icon: Icon(
+                  Icons.invert_colors,
+                  size: 25,
                 ),
-              )
+              ),
             ],
           ),
           elevation: 0.0,
@@ -65,6 +81,9 @@ class _HomeState extends State<Home> {
                   child: Column(
                     children: <Widget>[
                       /// CATEGORIES
+                      SizedBox(
+                        height: 10,
+                      ),
                       Container(
                         height: 100, // Container height
                         child: ListView.builder(
@@ -86,8 +105,8 @@ class _HomeState extends State<Home> {
                         padding: EdgeInsets.only(top: 15.0),
                         child: ListView.builder(
                           itemCount: articles.length,
-                          physics:
-                              ClampingScrollPhysics(), // VM : for scrolling in vertical direction
+                          physics: ClampingScrollPhysics(),
+                          // VM : for scrolling in vertical direction
                           shrinkWrap: true,
                           itemBuilder: (context, index) {
                             return BlogTile(
@@ -95,6 +114,9 @@ class _HomeState extends State<Home> {
                               title: articles[index].title,
                               desp: articles[index].description,
                               url: articles[index].url,
+                              content: articles[index].content,
+                              source: articles[index].source,
+                              // url: articles[index].url,
                             );
                           },
                         ),
@@ -125,34 +147,20 @@ class CategoryTile extends StatelessWidget {
       }, // help to onclick functions
       child: Container(
         margin: EdgeInsets.only(right: 10.0),
-        child: Stack(
+        height: 50,
+        child: Column(
           // use of stack data structure  [relative layout]
           children: <Widget>[
-            ClipRRect(
-              borderRadius: BorderRadius.circular(6),
-              child: CachedNetworkImage(
-                // for saving the cached image in the device to avoid net
-                imageUrl: imageURL,
-                height: 100.0,
-                width: 200.0,
-                fit: BoxFit.cover,
-              ),
+            CircleAvatar(
+              backgroundImage: NetworkImage(imageURL),
+              radius: 40,
+              backgroundColor: Colors.white,
             ),
-            Container(
-              alignment: Alignment.center,
-              height: 100.0,
-              width: 200.0,
-              decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(6),
-                color: Colors.black38,
-              ),
-              child: Text(
-                categoryname,
-                style: TextStyle(
-                  color: Colors.white,
-                  fontSize: 18.0,
-                  fontWeight: FontWeight.w500,
-                ),
+            Text(
+              categoryname,
+              style: GoogleFonts.poppins(
+                textStyle:
+                    TextStyle(fontSize: 13.0, fontWeight: FontWeight.w600),
               ),
             )
           ],
@@ -163,13 +171,15 @@ class CategoryTile extends StatelessWidget {
 }
 
 class BlogTile extends StatelessWidget {
-  final String imageUrl, title, desp, url;
+  final String imageUrl, title, desp, url, content, source;
 
   BlogTile(
       {@required this.imageUrl,
       @required this.title,
       @required this.desp,
-      @required this.url});
+      @required this.url,
+      @required this.content,
+      this.source});
 
   @override
   Widget build(BuildContext context) {
@@ -178,9 +188,8 @@ class BlogTile extends StatelessWidget {
         Navigator.push(
             context,
             MaterialPageRoute(
-                builder: (context) => article_views(
-                      blogURL: url,
-                    )));
+                builder: (context) =>
+                    Description(imageUrl, title, content, url, source)));
       },
       child: Container(
           margin: EdgeInsets.only(bottom: 18.0),
@@ -189,20 +198,87 @@ class BlogTile extends StatelessWidget {
               ClipRRect(
                   borderRadius: BorderRadius.circular(10.0),
                   child: Image.network(imageUrl)),
-              Text(title,
-                  style: TextStyle(
-                      fontSize: 18.0,
-                      color: Colors.black87,
-                      fontWeight: FontWeight.w500)),
+              Text(
+                title,
+                style: GoogleFonts.poppins(
+                  textStyle: TextStyle(
+                      //   color: _isswitched ? Colors.black : Colors.white,
+                      letterSpacing: .5,
+                      fontSize: 17.0,
+                      fontWeight: FontWeight.w600),
+                ),
+              ),
               SizedBox(height: 8),
               Text(
                 desp,
-                style: TextStyle(
-                  color: Colors.black54,
+                style: GoogleFonts.poppins(
+                  textStyle: TextStyle(
+                      //  color: _isswitched ? Colors.black : Colors.white,
+                      letterSpacing: .5,
+                      fontSize: 14.0,
+                      fontWeight: FontWeight.w400),
                 ),
               ),
             ],
           )),
+    );
+  }
+}
+
+String getStrToday() {
+  var today = DateFormat().add_yMMMMd().format(DateTime.now());
+  var strDay = today.split(" ")[1].replaceFirst(',', '');
+  if (strDay == '1') {
+    strDay = strDay + "st";
+  } else if (strDay == '2') {
+    strDay = strDay + "nd";
+  } else if (strDay == '3') {
+    strDay = strDay + "rd";
+  } else {
+    strDay = strDay + "th";
+  }
+  var strMonth = today.split(" ")[0];
+  var strYear = today.split(" ")[2];
+  return "$strDay $strMonth $strYear";
+}
+
+class WidgetTitle extends StatelessWidget {
+  final String strToday;
+
+  WidgetTitle(this.strToday);
+
+  @override
+  Widget build(BuildContext context) {
+    return Expanded(
+      child: Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 16.0),
+        child: RichText(
+          text: TextSpan(
+            children: [
+              TextSpan(
+                text: 'NewsUp\n',
+                style: GoogleFonts.poppins(
+                  textStyle: TextStyle(
+                      //      color: _isswitched ? Colors.black : Colors.white,
+                      letterSpacing: .5,
+                      fontSize: 16.0,
+                      fontWeight: FontWeight.w400),
+                ),
+              ),
+              TextSpan(
+                text: strToday,
+                style: GoogleFonts.poppins(
+                  textStyle: TextStyle(
+                      //       color: _isswitched ? Colors.black : Colors.white,
+                      letterSpacing: .5,
+                      fontSize: 14.0,
+                      fontWeight: FontWeight.w400),
+                ),
+              ),
+            ],
+          ),
+        ),
+      ),
     );
   }
 }
