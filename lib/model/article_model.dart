@@ -1,13 +1,13 @@
 class ArticleModel {
   String title, description, url, content;
-  String urlToImage;
+  String urlToImage, source;
 
   // creating a constructor for aricle news
-  ArticleModel({
-    this.title,
-    this.description,
-    this.url,
-    this.urlToImage,
-    this.content,
-  });
+  ArticleModel(
+      {this.title,
+      this.description,
+      this.url,
+      this.urlToImage,
+      this.content,
+      this.source});
 }
