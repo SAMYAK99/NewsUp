@@ -6,11 +6,11 @@ Switching to dynamic themes🎇 during runtime and persisting that theme is pret
 #Screenshots
 
   <tr>
-    <td><img src="./Screenshot/pic1.jpg" height = "600" width="1000"></td>  
+    <td><img src="./Screenshot/pic1.jpg" height = "600" width="800"></td>  
  </tr>
   <tr>
-    <td><img src="./Screenshot/pic2.jpg" height = "600" width="1000"></td>  
+    <td><img src="./Screenshot/pic2.JPG" height = "600" width="800"></td>  
  </tr>
   <tr>
-    <td><img src="./Screenshot/pic3.jpg" height = "600" width="1000"></td>  
+    <td><img src="./Screenshot/pic3.JPG" height = "600" width="800"></td>  
  </tr>
